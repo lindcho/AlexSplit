@@ -1,18 +1,4 @@
-﻿//using System;
-
-//namespace AlexSplit
-//{
-//    class Program
-//    {
-//        static void Main(string[] args)
-//        {
-//            Console.WriteLine("Hello World!");
-//        }
-//    }
-//}
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -22,7 +8,7 @@ using log4net.Config;
 
 namespace AlexSplit
 {
-    partial class Program
+    class Program
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
