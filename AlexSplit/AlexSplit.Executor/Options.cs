@@ -12,7 +12,7 @@ namespace AlexSplit.Executor
         public int NumberOfLines { get; set; }
 
 
-        private static string GetUsage()
+        public static string GetUsage()
         {
             var usage = new StringBuilder();
             usage.AppendLine("ApplicationName.exe -n <source> -l <numberOfLines>");

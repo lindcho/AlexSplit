@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using AlexSplit.Executor;
 using CommandLine;
 using log4net;
 using log4net.Config;
@@ -11,23 +11,26 @@ namespace AlexSplit
     class Program
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        static readonly Script script = new Script();
 
         static void Main(string[] args)
         {
             LoadConfiguration();
-
-            Parser.Default.ParseArguments<Options>(args)
-                .WithParsed(RunOptions)
-                .WithNotParsed(HandleParseError);
-
-            const int lineSize = 1000;
-            for (var counter = 0; counter <= lineSize; counter++)
+          
+            var parserResult = Parser.Default.ParseArguments<Options>(args);
+            if (parserResult == null)
             {
-                string message = $"Hello logging world! {counter}";
-                log.Info(message);
+                Console.WriteLine("invalid Arguments");
+                Console.WriteLine("Usage:");
+                Console.WriteLine(Options.GetUsage());
+                return;
             }
 
-            Console.ReadLine();
+            parserResult
+                .MapResult(
+                    ExecuteFileAndReturnExitCode,
+                    errs => 1);
+
         }
 
         private static void LoadConfiguration()
@@ -36,13 +39,10 @@ namespace AlexSplit
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
         }
 
-        static void RunOptions(Options opts)
+        private static int ExecuteFileAndReturnExitCode(Options opts)
         {
-            //handle options
-        }
-        static void HandleParseError(IEnumerable<Error> errs)
-        {
-            //handle errors
+            script.ExecuteFile(opts.Source, opts.NumberOfLines);
+            return 0;
         }
     }
 }

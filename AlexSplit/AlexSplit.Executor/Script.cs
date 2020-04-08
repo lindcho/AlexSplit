@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -7,7 +6,7 @@ namespace AlexSplit.Executor
 {
     public class Script
     {
-        public void RunScript(string fileName, int numberOfLines)
+        public void ExecuteFile(string fileName, int numberOfLines)
         {
             var extension = fileName.Split('.').Last();
             if (extension != "txt") return;
