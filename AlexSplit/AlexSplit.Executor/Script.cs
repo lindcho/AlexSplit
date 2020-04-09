@@ -56,9 +56,15 @@ namespace AlexSplit.Executor
             var logFileName = baseFile.Name.Split('.').First();
             folderName = Path.Combine(baseFile.DirectoryName, logFileName + ".log");
 
-            //TODO need to check if folder exists
-            Directory.CreateDirectory(folderName);
-            return logFileName;
+            if (!Directory.Exists(folderName))
+            {
+                Directory.CreateDirectory(folderName);
+                return logFileName;
+            }
+            else
+            {
+                return logFileName;
+            }
         }
 
         private static string CreateFileNameOnFolder<T>(int chunk, string logFileName, string folderName)
