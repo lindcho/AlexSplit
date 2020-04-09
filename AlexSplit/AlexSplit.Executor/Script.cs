@@ -11,28 +11,29 @@ namespace AlexSplit.Executor
         {
             var extension = fileName.Split('.').Last();
             if (extension != "txt") return;
+            if (numberOfLines <= 0) return;
 
-            if(numberOfLines<=0) return;
+
+            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+            var logFolder = CreateLogFolder(fileName);
+            var subDirectoryFileName = Path.Combine(logFolder,fileNameWithoutExtension);
 
             var splitSize = numberOfLines;
-            var currentDirectory = fileName;
-            using (var lineIterator = File.ReadLines(currentDirectory).GetEnumerator())
+            using (var lineIterator = File.ReadLines(fileName).GetEnumerator())
             {
                 bool stillGoing = true;
                 for (int chunk = 0; stillGoing; chunk++)
                 {
-                    stillGoing = WriteChunk(lineIterator, splitSize, chunk, currentDirectory);
+                    stillGoing = WriteChunk(lineIterator, splitSize, chunk, subDirectoryFileName);
                     Console.Write("  " + numberOfLines + " lines written" + "\n");
                 }
             }
 
         }
 
-        private static bool WriteChunk<T>(IEnumerator<T> lineIterator,
-            int splitSize, int chunk, string filepath)
+        private static bool WriteChunk(IEnumerator<string> lineIterator, int splitSize, int chunk, string subDirectory)
         {
-            var logFolder = CreateLogFolder<T>(filepath, out var folderName);
-            var fileNameOnFolder = CreateFileNameOnFolder<T>(chunk, logFolder, folderName);
+            var fileNameOnFolder = CreateFileNameOnFolder(chunk, subDirectory);
 
             using (var writer = File.CreateText(fileNameOnFolder))
             {
@@ -50,16 +51,14 @@ namespace AlexSplit.Executor
             return true;
         }
 
-        private static string CreateLogFolder<T>(string filepath, out string folderName)
+        private static string CreateLogFolder(string filepath)
         {
-            FileInfo baseFile = new FileInfo(filepath);
-            var logFileName = baseFile.Name.Split('.').First();
-            folderName = Path.Combine(baseFile.DirectoryName, logFileName + ".log");
+            var logFolder = filepath.Replace(".", "_");
 
-            if (!Directory.Exists(folderName))
-            {
-                Directory.CreateDirectory(folderName);
-                return logFileName;
+            if (!Directory.Exists(logFolder))
+                Directory.CreateDirectory(logFolder);
+
+            return logFolder;
             }
             else
             {
@@ -67,12 +66,11 @@ namespace AlexSplit.Executor
             }
         }
 
-        private static string CreateFileNameOnFolder<T>(int chunk, string logFileName, string folderName)
+        private static string CreateFileNameOnFolder(int chunk, string logFileName)
         {
-            var newFileName = logFileName + chunk + ".txt";
-            var actualName = Path.Combine(folderName, newFileName);
+            var newFileName = logFileName + "_" + chunk + ".txt";
+            return newFileName;
             Console.Write(newFileName);
-            return actualName;
         }
     }
 }
