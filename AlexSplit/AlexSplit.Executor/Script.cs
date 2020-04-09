@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -21,6 +22,7 @@ namespace AlexSplit.Executor
                 for (int chunk = 0; stillGoing; chunk++)
                 {
                     stillGoing = WriteChunk(lineIterator, splitSize, chunk, currentDirectory);
+                    Console.Write("  " + numberOfLines + " lines written" + "\n");
                 }
             }
 
@@ -69,6 +71,7 @@ namespace AlexSplit.Executor
         {
             var newFileName = logFileName + chunk + ".txt";
             var actualName = Path.Combine(folderName, newFileName);
+            Console.Write(newFileName);
             return actualName;
         }
     }
