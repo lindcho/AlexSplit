@@ -16,7 +16,7 @@ namespace AlexSplit.Executor
 
             var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
             var logFolder = CreateLogFolder(fileName);
-            var subDirectoryFileName = Path.Combine(logFolder,fileNameWithoutExtension);
+            var subDirectoryFileName = Path.Combine(logFolder, fileNameWithoutExtension);
 
             var splitSize = numberOfLines;
             using (var lineIterator = File.ReadLines(fileName).GetEnumerator())
@@ -25,7 +25,7 @@ namespace AlexSplit.Executor
                 for (int chunk = 0; stillGoing; chunk++)
                 {
                     stillGoing = WriteChunk(lineIterator, splitSize, chunk, subDirectoryFileName);
-                    Console.Write("  " + numberOfLines + " lines written" + "\n");
+                    Console.Write(" " + numberOfLines + " lines written" + "\n");
                 }
             }
 
@@ -59,18 +59,12 @@ namespace AlexSplit.Executor
                 Directory.CreateDirectory(logFolder);
 
             return logFolder;
-            }
-            else
-            {
-                return logFileName;
-            }
         }
 
         private static string CreateFileNameOnFolder(int chunk, string logFileName)
         {
             var newFileName = logFileName + "_" + chunk + ".txt";
             return newFileName;
-            Console.Write(newFileName);
         }
     }
 }
