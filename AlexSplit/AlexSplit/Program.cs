@@ -1,4 +1,5 @@
-﻿using System.CommandLine;
+﻿using System;
+using System.CommandLine;
 using System.CommandLine.Invocation;
 using AlexSplit.Executor;
 
@@ -35,8 +36,14 @@ namespace AlexSplit
         private static int ExecuteFileAndReturnExitCode(string name, int lines)
         {
             var opts = new Options { Source = name, NumberOfLines = lines };
-
-            script.ExecuteFile(opts.Source, opts.NumberOfLines);
+            try
+            {
+                script.ExecuteFile(opts.Source, opts.NumberOfLines);
+            }
+            catch
+            {
+                Console.Write("The given path does not exist.");
+            }
             return 0;
         }
     }
